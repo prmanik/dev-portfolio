@@ -1,4 +1,4 @@
-\# Priyanka Dev Portfolio
+\# Priyanka – Full‑Stack • Cloud • AI Portfolio
 
-This repository contains my full stack, cloud, and AI learning journey.
+This repository is the foundation of my 6‑month full stack, cloud and AI journey.
 
