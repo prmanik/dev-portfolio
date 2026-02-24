@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "NembhB3qDtw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\u1143101\\My Learning\\Projects\\dev-portfolio\\backend\\SkillTrack.Api\\SkillTrack.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\u1143101\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.9\\microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
+    "C:\\Users\\u1143101\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
