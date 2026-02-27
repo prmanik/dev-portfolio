@@ -76,10 +76,68 @@ app.MapPost("/goals", async (
     if (!validation.IsValid)
         return Results.ValidationProblem(validation.ToDictionary());
     var goal = new Goal { Title = dto.Title };
+    db.Goals.Add(goal);
     await db.SaveChangesAsync();
 
     return Results.Created($"/goal/{goal.Id}", goal);
 });
+
+// ----------------------
+// New: GET/goals -> get goal list in SQL Server via EF Core
+// ----------------------
+
+app.MapGet("/goals", async (
+    AppDbContext db,
+    CancellationToken ct) =>
+{
+    var items = await db.Goals
+    .OrderBy(g => g.Id)
+    .Select(g => new GoalDto(g.Id, g.Title, g.CreatedAt))
+    .ToListAsync(ct);
+
+    return Results.Ok(items);
+})
+.Produces<List<GoalDto>>(StatusCodes.Status200OK)
+.WithName("GetGoals")
+.WithOpenApi();
+
+// ----------------------
+// New: GET/goals -> get a goal by Id in SQL Server via EF Core
+// ----------------------
+app.MapGet("/goals/{id:int}", async ( int id,
+    AppDbContext db,
+    CancellationToken ct) =>
+{
+    var g  = await db.Goals
+    .Where(x=> x.Id == id)
+    .Select( x=> new GoalDto(x.Id, x.Title, x.CreatedAt))
+    .ToListAsync(ct);
+    return g is null ? Results.NotFound() : Results.Ok(g);
+    
+})
+.Produces<GoalDto>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status404NotFound)
+.WithName("GetGoalById")
+.WithOpenApi();
+
+// ----------------------
+// New: Delete/goals -> delete a goal by id in SQL Server via EF Core
+// ----------------------
+app.MapDelete("/goals/{id:int}", async (int id,
+     AppDbContext db,
+     CancellationToken ct) => {
+     var g = await db.Goals.FindAsync(id);
+         if (g is null)
+             return Results.NotFound();
+         db.Goals.Remove(g);
+         await db.SaveChangesAsync();
+
+         return Results.NoContent();
+})
+.Produces(StatusCodes.Status204NoContent)
+.Produces(StatusCodes.Status404NotFound)
+.WithName("DeleteGoalById")
+.WithOpenApi();
 
 app.Run();
 
@@ -87,3 +145,5 @@ app.Run();
 //{
 //    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 //}
+
+public record GoalDto(int Id, string Title, DateTime CreatedAt);
